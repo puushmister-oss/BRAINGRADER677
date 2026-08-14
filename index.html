@@ -4367,4 +4367,32 @@ claimPendingCredit(true);
         </div>
       </div>
     </div>
-  </div></body></html>
+ </div>
+
+<script>
+async function loadBalance() {
+  try {
+    const userId = localStorage.getItem("braingrader_user_id") || "test";
+    localStorage.setItem("braingrader_user_id", userId);
+
+    const response = await fetch("/api/balance?id=" + encodeURIComponent(userId));
+    const data = await response.json();
+
+    console.log("BALANCE:", data);
+
+    if (!data.ok) return;
+
+    document.querySelectorAll("#balance, .balance, [data-balance]").forEach(el => {
+      el.textContent = Number(data.balance).toLocaleString("ru-RU") + " 🧠";
+    });
+
+  } catch (error) {
+    console.error("Ошибка баланса:", error);
+  }
+}
+
+loadBalance();
+</script>
+
+</body>
+</html>
