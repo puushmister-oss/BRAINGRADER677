@@ -4393,20 +4393,5 @@ async function loadBalance() {
 
 loadBalance();
 </script>
-
-<script>
-fetch('/api/balance?id=test')
-  .then(r => r.json())
-  .then(data => {
-    if (!data.ok) return;
-
-    document.querySelectorAll('*').forEach(el => {
-      if (el.children.length === 0 && el.textContent.trim() === '0') {
-        el.textContent = data.balance;
-      }
-    });
-  })
-  .catch(console.error);
-</script>
 </body>
 </html>
