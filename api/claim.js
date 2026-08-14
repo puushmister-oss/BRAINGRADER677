@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       });
     }
 
-    // Получаем пользователя
+    // Проверяем пользователя
     const result = await sql`
       SELECT id, balance
       FROM users
@@ -25,22 +25,30 @@ export default async function handler(req, res) {
     if (result.length === 0) {
       await sql`
         INSERT INTO users (id, balance)
-        VALUES (${id}, 0)
+        VALUES (${id}, 100)
       `;
 
       return res.status(200).json({
         ok: true,
         id,
-        balance: 0,
-        claimed: false
+        balance: 100,
+        claimed: true
       });
     }
 
+    // Если пользователь уже существует — начисляем 100
+    const updated = await sql`
+      UPDATE users
+      SET balance = balance + 100
+      WHERE id = ${id}
+      RETURNING id, balance
+    `;
+
     return res.status(200).json({
       ok: true,
-      id: result[0].id,
-      balance: Number(result[0].balance),
-      claimed: false
+      id: updated[0].id,
+      balance: Number(updated[0].balance),
+      claimed: true
     });
 
   } catch (error) {
