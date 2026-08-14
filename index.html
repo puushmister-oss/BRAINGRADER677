@@ -4174,7 +4174,7 @@ function openAdminLogin(){
 async function claimPendingCredit(silent){
   if(!state.profileId) return;
   try{
-    const resp = await fetch('/api/claim?id=' + encodeURIComponent(state.profileId));
+    const resp = await fetch('?id=' + encodeURIComponent(state.profileId));
     if(!resp.ok) return;
     const data = await resp.json().catch(()=>({}));
     const claimed = Math.trunc(Number(data.claimed) || 0);
