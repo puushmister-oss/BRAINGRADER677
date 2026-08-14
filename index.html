@@ -4393,5 +4393,49 @@ async function loadBalance() {
 
 loadBalance();
 </script>
+<script>
+document.getElementById('adminTopupBtn')?.addEventListener('click', async () => {
+  const id = document.getElementById('adminTargetId').value.trim();
+  const amount = Number(document.getElementById('adminTopupAmt').value);
+  const msg = document.getElementById('adminTopupMsg');
+
+  if (!id) {
+    msg.textContent = '❌ Введи ID игрока';
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    msg.textContent = '❌ Введи правильную сумму';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/topup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        amount: amount
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.ok) {
+      msg.textContent = '❌ ' + (data.error || 'Ошибка');
+      return;
+    }
+
+    msg.textContent =
+      `✅ ID ${data.id} пополнен на +${data.added} 🧠. Баланс: ${data.balance} 🧠`;
+
+  } catch (error) {
+    console.error(error);
+    msg.textContent = '❌ Не удалось связаться с сервером';
+  }
+});
+</script>
 </body>
 </html>
